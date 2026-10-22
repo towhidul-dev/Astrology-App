@@ -1,44 +1,45 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * Astrology App
+ *
+ * Two screens:
+ *   1. BirthDetailsScreen - the user enters birth details
+ *   2. ChartScreen        - shows the astrology chart
+ *
+ * We switch between screens with a simple piece of state
+ * (no navigation library needed).
  *
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useState } from 'react';
+import { StatusBar, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import BirthDetailsScreen from './src/screens/BirthDetailsScreen';
+import ChartScreen from './src/screens/ChartScreen';
+import { BirthDetails } from './src/types';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  // null = show the form. Once filled in, show the chart.
+  const [details, setDetails] = useState<BirthDetails | null>(null);
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={styles.container}>
+        {details === null ? (
+          <BirthDetailsScreen onSubmit={setDetails} />
+        ) : (
+          <ChartScreen details={details} onBack={() => setDetails(null)} />
+        )}
+      </SafeAreaView>
     </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#14142b',
   },
 });
 
